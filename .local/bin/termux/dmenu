@@ -14,7 +14,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		-sb) color_sb="$2" ; shift 2 ;;
 		-sf) color_sf="$2" ; shift 2 ;;
 		-[mw]) shift 2 ;;
-		-*) exit ;;
+		-*) shift ;;
 	esac done
 
 	[ -t 0 ] || items="$(xargs -0)"
