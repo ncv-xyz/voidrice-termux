@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# sensors wrapper for Termux.
+
+temp="$(termux-battery-status | grep temperature)"
+temp="${temp#*: }"
+temp="${temp%,}"
+
+printf "Core 0:   +%s°C\n" "$temp"

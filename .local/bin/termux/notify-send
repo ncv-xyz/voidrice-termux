@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# notify-send wrapper for Termux.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for o in $@ ; do case "$o" in
+		-u|--u*) urgency="$2" ; shift 2 ;;
+		-[aAtichr]|--[aticr]*|--hi*) shift 2 ;;
+		-?|--h*) exit ;;
+		-*) shift ;;
+	esac ; done
+	[ -z "$1" ] && exit
+
+	# dunst transparency
+	[ -f "${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" ] &&
+		transparency="$(grep "transparency" \
+		"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
+		cut -d" " -f7)"
+	transparency="${transparency:-0}"
+	transparency="$(((100 - transparency) * 255 / 100))"
+	case 1 in
+		$((transparency < 10)) ) transparency="0$transparency" ;;
+		$((transparency > 16)) )
+			transparency="$((transparency / 16)) $((transparency * 10000 / 16 % 10000 * 16 / 10000))"
+			pattern="s/10/a/;s/11/b/;s/12/c/;s/13/d/;s/14/e/;s/15/f/;s/ //"
+			transparency="$(echo "$transparency" | sed "$pattern")" ;;
+	esac
+
+	# dunst colors
+	[ -f "${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" ] &&
+		{ foreground="$(grep "_${urgency:-normal}" -A 2 \
+			"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
+			grep "foreground" | cut -d'"' -f2)"
+		foreground="#${transparency}${foreground#\#}"
+		background="$(grep "_${urgrncy:-normal}" -A 2 \
+			"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
+			grep "background" | cut -d'"' -f2)"
+		background="#${transparency}${background#\#}" ;}
+
+	[ -z "$2" ] && body="$1" || { summary="$1" ; body="$2" ;}
+
+	termux-toast -g top \
+		-c "$foreground" -b "$background" \
+		"$(printf "%s\n%s" "$summary" "$body")"
+else
+	"$PREFIX"/bin/notify-send "$@"
+fi

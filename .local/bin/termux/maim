@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# maim wrapper for Termux. Requires root.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	command -v sudo >/dev/null 2>&1 || exit 1
+	for var in "$@" ; do case "$var" in
+		-*) ;;
+		*) args="$args $var" ;;
+	esac done
+	set -- "${args# }"
+	sudo screencap "$@"
+else
+	"$PREFIX"/bin/maim $@
+fi

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	case "$1" in
+		-q*) printf "%s\n" "layout:      $(echo "$LANG" | sed "s/.*_\(.*\)\..*/\L\1/")" ;;
+	esac
+else
+	"$PREFIX"/bin/setxkbmap "$@"
+fi

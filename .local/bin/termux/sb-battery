@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# sb-battery wrapper for Termux
+
+# Sets up the status and capacity
+case "$(termux-battery-status | grep status | cut -d'"' -f4)" in
+	"FULL") status="⚡" ;;
+	"DISCHARGING") status="🔋" ;;
+	"CHARGING") status="🔌" ;;
+	"NOT CHARGING") status="🛑" ;;
+	"UNKNOWN") status="♻️" ;;
+	*) exit 1 ;;
+esac
+
+capacity="$(termux-battery-status | grep percentage)"
+capacity="${capacity#*: }"
+capacity="${capacity%,}"
+
+# Will make a warn variable if discharging and low
+[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
+
+# Prints the info
+printf "%s%s%d%%" "$status" "$warn" "$capacity"
+printf "\\n"

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# xdotool wrapper for Termux.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	[ "$1" = "type" ] && shift || exit 0
+	for o in $@ ; do case "$o" in
+		--f*) file='1' ; shift ;;
+		--[wd*]) shift 2 ;;
+		-*) shift ;;
+	esac done
+	[ -z "$file" ] || file="$(cat "${1:-$([ -t 0 ] || xargs)}")"
+	input="${file:-${@:-$([ -t 0 ] || xargs)}}"
+	[ -z "$input" ] && exit
+	termux-clipboard-set "$input"
+else
+	"$PREFIX"/bin/xdotool "$@"
+fi

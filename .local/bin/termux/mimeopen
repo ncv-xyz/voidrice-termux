@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# mimeopen wrapper for Termux.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for var in "$@" ; do case "$var" in
+		-a|--ask) ask='1' ;;
+		-*) ;;
+		*) args="$args $var" ;;
+	esac done
+	set -- "${args# }"
+	file="${1:-$([ -t 0 ] || xargs)}"
+	[ -z "$ask" ] || { termux-share "$file" ; exit ;}
+	termux-share -d "$file"
+else
+	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
+fi
