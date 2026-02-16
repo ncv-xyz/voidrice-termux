@@ -71,3 +71,29 @@ export _JAVA_AWT_WM_NONREPARENTING=1      # Fix for Java applications in dwm
 
 # Switch escape and caps if tty and no passwd required:
 sudo -n loadkeys "$XDG_DATA_HOME/larbs/ttymaps.kmap" 2>/dev/null
+
+# Termux
+if [ -n "$TERMUX_VERSION" ]; then
+	# Prepend wrappers to $PATH.
+	export PATH="$HOME/.local/bin/termux:$PATH"
+	# Set host and user names.
+	export USER="larbs" # Set username here.
+	export HOST="$(getprop ro.product.device)" # Set hostname here.
+	export HOSTNAME="$HOST"
+	export USERNAME="$USER"
+	export LOGNAME="$USER"
+	# Pretend to be SSH (for lfub) and fix GPG.
+	export SSH_TTY="$TTY"
+	export GPG_TTY="$TTY"
+	# Fix "pager: not found"
+	export PAGER="less"
+	# Fix "ncmpcpp: No such file or directory"
+	export MPD_HOST="${MPD_HOST:-localhost}"
+	# Autostart these programs.
+	autostart="mpd"
+	for program in $autostart; do
+		pidof -sx "$program" || "$program"
+	done >/dev/null 2>&1
+	# Start tmux on user's current tty if not already running.
+	[ -z "$TMUX" ] && { unset ZDOTDIR ; exec tmux new-session -A -s $USER >/dev/null 2>&1 ;}
+fi
