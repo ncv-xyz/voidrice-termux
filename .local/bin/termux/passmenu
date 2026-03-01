@@ -2,7 +2,7 @@
 
 # passmenu wrapper for Termux.
 
-which pass >/dev/null || exit 1
+type pass >/dev/null || exit 1
 
 [ "$1" = "--type" ] && typeit="true"
 
