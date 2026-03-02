@@ -12,6 +12,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 			lock) cp /dev/null "$PREFIX/tmp/lock" ;;
 			unlock) rm -f "$PREFIX/tmp/lock" ;;
 		esac
+		notify-send "${lock}ed."
 		termux-wake-${lock##* }
 	}
 
