@@ -45,7 +45,7 @@ curl -LO larbs.xyz/larbs.sh
 ```
 
 or clone the repo files directly to your home directory and install the
-[dependencies](https://ncv.codeberg.page/progs.csv).
+[dependencies](https://ncv.codeberg.page/files/progs.csv).
 
 ## Default Desktop Artwork
 
