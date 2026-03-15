@@ -2,7 +2,11 @@
 
 # sb-battery wrapper for Termux
 
-case "$(termux-wifi-connectioninfo | grep supplicant | cut -d'"' -f4 2>/dev/null)" in
+state="$(termux-wifi-connectioninfo | grep "supplicant")"
+state="${state%\"*}"
+state="${state##*\"}"
+
+case "$state" in
 	"COMPLETED") wifiicon="$(termux-wifi-connectioninfo | awk '/rssi/ { print "📶", int( ($2 + 110) * 10 / 7) "% " }')" ;;
 	"DISCONNECTED") wifiicon="📡 " ;;
 	"UNINITIALIZED") ;;

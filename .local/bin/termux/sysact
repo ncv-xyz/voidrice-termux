@@ -3,10 +3,8 @@
 # sysact script wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-
 	lock="🔒 wake lock"
 	[ -f "$PREFIX/tmp/lock" ] && lock="🔓 wake unlock"
-
 	lock() {
 		case "${lock##* }" in
 			lock) cp /dev/null "$PREFIX/tmp/lock" ;;
@@ -15,7 +13,6 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		notify-send "${lock}ed."
 		termux-wake-${lock##* }
 	}
-
 	case "$(printf "$lock\n🚪 leave tmux\n♻️ renew termux\n🖥️shutdown" | dmenu -i -p 'Action: ')" in
 		"$lock") lock ;;
 		'🚪 leave tmux') tmux kill-session ;;
@@ -23,7 +20,6 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		'🖥️shutdown') kill -TERM $(pidof com.termux) ;;
 		*) exit 1 ;;
 	esac
-
 else
 	"$HOME"/.local/bin/sysact
 fi

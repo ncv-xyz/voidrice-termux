@@ -1,13 +1,13 @@
 #!/bin/sh
 
-# xwallpaper wrapper for Termux.
+# xwallpaper wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for o in $@ ; do case "$o" in
 		--[cdnv]*) shift ;;
 		--[sofmtz]*|--ce*) shift 2 ;;
 	esac ; done
-	[ -f "$1" ] || { printf "File not found: $1\\n" ; exit 1 ;}
+	[ -f "$1" ] || { echo "File not found: $1" ; exit 1 ;}
 	file="$(readlink -f "$1")"
 	termux-wallpaper -f "$file"
 	termux-wallpaper -l -f "$file"

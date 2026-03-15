@@ -1,10 +1,11 @@
 #!/bin/sh
 
-# dmenu wrapper for fzf.
+# dmenu wrapper for fzf
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+
 	for o in $@ ; do case "$o" in
-		-b) layout="default" ; shift ;;
+		-b) layout=default ; shift ;;
 		-i) case="-i" ; shift ;;
 		-l) height="$2" ; shift 2 ;;
 		-p) prompt="$2" ; shift 2 ;;
@@ -26,7 +27,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	esac
 
 	# dmenu format
-	export FZF_DEFAULT_OPTS="--no-info --no-separator --no-scrollbar \
+	FZF_DEFAULT_OPTS="--no-info --no-separator --no-scrollbar \
 		--prompt='$prompt' --gutter=' ' --pointer='' --ellipsis='' \
 		--highlight-line --no-hscroll --raw --border=none \
 		--layout=${layout:-reverse} --height=$height \
@@ -34,7 +35,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		--preview-window='' --bind=change:best"
 
 	# dmenu keybinds
-	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 		--bind=tab:yank,ctrl-i:yank \
 		--bind=ctrl-y:yank,ctrl-Y:yank \
 		--bind=enter:accept \
@@ -67,7 +68,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	fi
 
 	# dmenu colors
-	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 		--color=list-fg:${color_nf:-#bbbbbb},hl:${color_nf:-#bbbbbb} \
 		--color=prompt:${color_nf:-#bbbbbb}:regular \
 		--color=nomatch:regular \

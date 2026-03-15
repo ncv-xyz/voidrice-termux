@@ -1,11 +1,6 @@
 #!/bin/sh
 
-# linkhandler wrapper for Termux.
-
-# If an image or document, it will view with mimeopen,
-# if a video, it will view in mpv,
-# if a music file, it will queue for download,
-# otherwise it opens the link in browser.
+# linkhandler wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	[ -z "$1" ] && url="$(termux-clipboard-get)" || url="$1"

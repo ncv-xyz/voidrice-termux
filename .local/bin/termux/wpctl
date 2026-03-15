@@ -60,13 +60,13 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		newvol="${newvol#0}"
 		[ -z "$op" ] && vol="$newvol" || vol="$((vol $op newvol))"
 		case 1 in
-			$((vol >= 100)) ) vol="100" ;;
-			$((vol <= 0)) ) vol="0" ;;
+			$((vol >= 100)) ) vol=100 ;;
+			$((vol <= 0)) ) vol=0 ;;
 		esac
 		termux-volume music $((vol * 25 / 100))
 		}
 	setmute() {
-		if [ -z "$1" ] || [ -z "$2" ]; then err ; fi
+		[ -z "$2" ] && err
 		case "$2" in
 			1) termux-volume music 0 ;;
 			toggle) termux-volume music 0 ;;
