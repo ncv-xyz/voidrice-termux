@@ -4,13 +4,13 @@
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for o in $@ ; do case "$o" in
-		--[cdnv]*) shift ;;
-		--[sofmtz]*|--ce*) shift 2 ;;
+		--o*|--sc*|--tr*) shift 2 ;;
+		--*) shift ;;
 	esac ; done
 	[ -f "$1" ] || { echo "File not found: $1" ; exit 1 ;}
 	file="$(readlink -f "$1")"
-	termux-wallpaper -f "$file"
-	termux-wallpaper -l -f "$file"
+	termux-wallpaper -f "$file" >/dev/null 2>&1
+	termux-wallpaper -l -f "$file" >/dev/null 2>&1
 else
 	"$PREFIX"/bin/xwallpaper "$@"
 fi
