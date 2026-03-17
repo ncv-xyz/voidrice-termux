@@ -74,7 +74,7 @@ sudo -n loadkeys "$XDG_DATA_HOME/larbs/ttymaps.kmap" 2>/dev/null
 
 # Termux
 if [ -n "$TERMUX_VERSION" ]; then
-	# Prepend wrappers to $PATH.
+	# Prepend wrappers to $PATH
 	export PATH="$HOME/.local/bin/termux:$PATH"
 	# Set host and user names.
 	export USER="larbs" # Set username here.
