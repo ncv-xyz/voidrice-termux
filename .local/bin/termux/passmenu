@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# passmenu wrapper for Termux.
+# passmenu wrapper for Termux
 
 type pass >/dev/null || exit 1
 
-[ "$1" = "--type" ] && typeit="true"
+[ "$1" = "--type" ] && typeit=1
 
 prefix="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
 
@@ -12,14 +12,14 @@ for i in $(ls "$PASSWORD_STORE_DIR") ; do
 	password_files="${password_files#\\n}\n${i%.gpg}"
 done
 
-password="$(echo "${password_files}" | dmenu "$@")"
+password="$(echo "$password_files" | dmenu)"
 
 [ -z $password ] && exit
 
 if [ -z "$typeit" ]; then
 	pass show -c "$password" 2>/dev/null
 else
-	pass show "$password" |
-		{ IFS= read -r pass ; printf %s "$pass" ;} |
-			xdotool type --clearmodifiers --file -
+	pass show "$password" \
+		| { IFS= read -r pass ; printf %s "$pass" ;} \
+		| xdotool type --clearmodifiers --file -
 fi
