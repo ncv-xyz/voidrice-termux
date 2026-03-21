@@ -28,8 +28,8 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	esac
 
 	# dunst colors
-	[ -f "${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" ] &&
-		{
+	[ -f "${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" ] \
+		&& {
 			foreground="$(grep "_${urgency:-normal}" -A 2 "${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" | grep "foreground")"
 			foreground="${foreground#*\"}"
 			foreground="${foreground%\"*}"

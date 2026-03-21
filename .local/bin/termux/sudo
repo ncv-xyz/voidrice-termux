@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# wrapper for Termux/sudo
+# sudo wrapper for Termux
 
 case "$1" in
 	"pacman") shift && pacman "$@" ;;
