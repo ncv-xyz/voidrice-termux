@@ -41,7 +41,9 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		tmux source-file ~/.config/tmux/tmux.conf >/dev/null 2>&1
 	fi
 
-	xwallpaper --zoom "$bgloc"
+
+	termux-wallpaper -f "$bgloc" >/dev/null 2>&1
+	termux-wallpaper -l -f "$bgloc" >/dev/null 2>&1
 
 else
 	"$HOME"/.local/bin/setbg "$@"
