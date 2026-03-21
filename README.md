@@ -1,8 +1,8 @@
 # The Voidrice (fork of Luke Smith <https://lukesmith.xyz>'s dotfiles)
 
-This is a fork of the dotfiles deployed by [LARBS](https://larbs.xyz) and as
-seen on [Luke Smith's YouTube channel](https://youtube.com/c/lukesmithxyz) to
-make them work in [Termux](https://github.com/termux/termux-app).
+These are the dotfiles deployed by [LARBS](https://larbs.xyz) and as seen on
+[Luke Smith's YouTube channel](https://youtube.com/c/lukesmithxyz)
+made to work in [Termux](https://github.com/termux/termux-app).
 
 - Very useful scripts are in `~/.local/bin/`
 - Settings for:
@@ -13,7 +13,7 @@ make them work in [Termux](https://github.com/termux/termux-app).
 	- nsxiv (image/gif viewer)
 	- mpv (video player)
 	- other stuff like xdg default programs, inputrc and more, etc.
-- We try to minimize what's directly in `~` so:
+- I try to minimize what's directly in `~` so:
 	- All configs that can be in `~/.config/` are.
 	- Some environmental variables have been set in `~/.zprofile` to move configs into `~/.config/`
 - Bookmarks in text files used by various scripts (like `~/.local/bin/shortcuts`)
@@ -30,10 +30,11 @@ and [API commands](https://github.com/termux/termux-api) available.
 - [Termux Pacman](https://github.com/termux-pacman)
 - [Termux:API](https://github.com/termux/termux-api)
 
-Also try out [mutt-wizard](https://github.com/lukesmithxyz/mutt-wizard), which
-additionally works with this setup. It gives you an easy-to-install
-terminal-based email client regardless of your email provider. It is
-integrated into these dotfiles as well. Check out my
+I also recommend trying out
+[mutt-wizard](https://github.com/lukesmithxyz/mutt-wizard), which additionally
+works with this setup. It gives you an easy-to-install terminal-based email
+client regardless of your email provider. It is integrated into these dotfiles
+as well. See my
 [fork to make it work in Termux](https://github.com/ncv-xyz/mutt-wizard).
 
 ## Install these dotfiles and all dependencies
@@ -55,7 +56,7 @@ Thomas Thiemeyer's *The Road to Samarkand* ([fb](https://www.facebook.com/t.thie
 
 By default, no x11 packages are installed. I don't usually work outside tty so
 I haven't tested LARBS with it in Termux, nor setup everything here to work
-right with it. But if you comment out the lines `SSH_TTY` and `GPG_TTY` in
+right with it. But if you comment out the lines for `SSH_TTY` and `GPG_TTY` in
 `~/.zprofile`, everything should work.
 
 Current packages for LARBS which are unavailable in Termux:
