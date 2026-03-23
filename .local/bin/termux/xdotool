@@ -2,7 +2,7 @@
 
 # xdotool wrapper for Termux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	[ "$1" = "type" ] && shift || exit
 	for o in $@ ; do case "$o" in
 		--f*) file=1 ; shift ;;

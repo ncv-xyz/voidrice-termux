@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	case "$1" in
 		-q*)
 			lang="${LANG#*_}"

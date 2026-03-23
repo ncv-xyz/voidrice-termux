@@ -2,7 +2,7 @@
 
 # dmenu wrapper for fzf
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 
 	for o in $@ ; do case "$o" in
 		-b) layout=default ; shift ;;

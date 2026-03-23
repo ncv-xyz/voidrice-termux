@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# xclip wrapper for Termux.
+# xclip wrapper for Termux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	for o in $@ ; do case "$o" in
 		-h*|-vers*) exit ;;
 		-o*) clip="out" ;;

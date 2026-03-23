@@ -2,7 +2,7 @@
 
 # xwallpaper wrapper for Termux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	for o in $@ ; do case "$o" in
 		--o*|--sc*|--tr*) shift 2 ;;
 		--*) shift ;;

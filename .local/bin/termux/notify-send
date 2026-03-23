@@ -2,7 +2,7 @@
 
 # notify-send wrapper for tmux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	for o in $@ ; do case "$o" in
 		-u|--u*) urgency="$2" ; shift 2 ;;
 		-[aAtichr]|--[aticr]*|--hi*) shift 2 ;;

@@ -2,7 +2,7 @@
 
 # wireplumber wrapper for Termux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	err() { printf "%s\n" \
 		"Usage:" \
 		"	wpctl [OPTION…] COMMAND [COMMAND_OPTIONS] - WirePlumber Control CLI" \

@@ -2,7 +2,7 @@
 
 # mimeopen wrapper for Termux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	for var in "$@" ; do case "$var" in
 		-a|--ask) ask=1 ;;
 		-*) ;;

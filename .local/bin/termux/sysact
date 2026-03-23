@@ -2,7 +2,7 @@
 
 # sysact script wrapper for Termux
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$TMUX" ]; then
 	lock="🔒 wake lock"
 	[ -f "$PREFIX/tmp/lock" ] && lock="🔓 wake unlock"
 	lock() {
