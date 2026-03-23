@@ -2,9 +2,9 @@
 
 # sudo wrapper for Termux
 
-case "$1" in
-	"pacman") shift && pacman "$@" ;;
-	"make") shift && make PREFIX="${PREFIX:-/usr/local}" "$@" ;;
-	"loadkeys") exit ;;
+cmd="$1"
+case "$cmd" in
+	sv|pacman) shift ; $cmd "$@" ;;
+	make) shift ; make PREFIX="${PREFIX:-/usr/local}" "$@" ;;
 	*) "$PREFIX"/bin/sudo "$@" ;;
 esac
