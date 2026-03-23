@@ -79,5 +79,5 @@ if [ -n "$TMUX" ]; then
 		*) err ;;
 	esac
 else
-	"$PREFIX"/bin/"$0" "$@"
+	"$PREFIX"/bin/${0##*/} "$@"
 fi
