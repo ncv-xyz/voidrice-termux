@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# st wrapper for tmux
+
+if [ -n "$TMUX" ]; then
+	for o in $@ ; do case "$o" in
+		-[ai]*) shift ;;
+		-*v*) exit ;;
+		-[cfgolw]*) shift 2 ;;
+		-n) name="$2" ; shift 2 ;;
+		-[tT]) title="$2" ; shift 2 ;;
+		-e) command="$2" ; shift 2 ;;
+	esac done
+	name="${name:-"$TERM"}"
+	title="${title:-st}"
+	arguments="$command $@"
+	arguments="${arguments# }"
+	tmux \
+		set @shcmd "$arguments" \; \
+		run -C "splitw -t:.0 #{?@shcmd,\"#{@shcmd}\",}" \; \
+		swapp -s:.0 -t:.1
+else
+	"$PREFIX"/bin/st "$@"
+fi
