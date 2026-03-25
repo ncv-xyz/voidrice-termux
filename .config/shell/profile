@@ -77,7 +77,7 @@ if [ -n "$TERMUX_VERSION" ]; then
 	# Prepend wrappers to $PATH
 	export PATH="$HOME/.local/bin/termux:$PATH"
 	# Set host and user names.
-	export USER="larbs" # Set username here.
+	export USER="name" # Set username here.
 	export HOST="$(getprop ro.product.device)" # Set hostname here.
 	export HOSTNAME="$HOST"
 	export USERNAME="$USER"
