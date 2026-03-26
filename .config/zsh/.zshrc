@@ -83,10 +83,10 @@ source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.
 
 # Termux
 if [ -n "$TERMUX_VERSION" ]; then
-	# Set prompt username to $USER.
-	PS1="%B%{$fg[red]%}[%{$fg[yellow]%}${USER:-$USERNAME}%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-	# Disable Termux's command-not-found handler.
-	unset -f command_not_found_handler
-	# Load syntax highlighting in ~/.local/src.
+	# Set prompt username to $USER
+	PS1="${PS1%\%n*}${USER:-$USERNAME}${PS1#*%n}"
+	# Disable command-not-found handler
+	unset -f command_not_found_handler 2>/dev/null
+	# Load syntax highlighting at ~/.local/src
 	source "$HOME"/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 fi
