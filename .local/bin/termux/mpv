@@ -25,7 +25,7 @@ if [ -n "$TMUX" ]; then
 	# Open audio as usual, but open videos in an app
 	case "$(file --mime-type "$(readlink -f "$1")" -b)" in
 		audio/*|video/x-ms-asf) "$PREFIX"/bin/mpv "$@" ;;
-		video/*) mimeopen "$1" ;;
+		video/*) termux-share -d "$1" ;;
 	esac
 
 else

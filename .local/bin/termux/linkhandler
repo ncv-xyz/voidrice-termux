@@ -4,8 +4,8 @@
 
 if [ -n "$TMUX" ]; then
 	url="${1:-"$(termux-clipboard-get)"}"
-	[ -f "$url" ] && { mimeopen "$url" ; exit ;}
-	setsid -f "$BROWSER" "$url" >/dev/null 2>&1
+	[ -f "$url" ] && command="termux-share -d"
+	${command:-termux-open-url} "$url" >/dev/null 2>&1
 else
 	"$HOME"/.local/bin/linkhandler "$@"
 fi
