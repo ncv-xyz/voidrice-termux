@@ -6,7 +6,7 @@ if [ -n "$TMUX" ]; then
 	err() { printf "%s\n" \
 		"Usage:" \
 		"	wpctl [OPTION…] COMMAND [COMMAND_OPTIONS] - WirePlumber Control CLI" \
-		"" \
+		" " \
 		"Commands:" \
 		"	status" \
 		"	get-volume ID" \
@@ -19,21 +19,21 @@ if [ -n "$TMUX" ]; then
 		"	clear-default [ID]" \
 		"	settings [KEY] [VAL]" \
 		"	set-log-level [ID] LEVEL" \
-		"" \
+		" " \
 		"Help Options:" \
 		"	-h, --help	Show help options" \
-		"" \
+		" " \
 		"Pass -h after a command to see command-specific options" ; exit ;}
 	getvolume() {
 		[ -z "$1" ] && err
 		vol="$(termux-volume | grep -A 1 "music" | grep "volume")"
 		vol="${vol##* }"
 		vol="${vol%,}"
-		vol="$((vol * 100 / 25 ))"
+		vol="$(( vol * 100 / 25 ))"
 		case 1 in
-			$((vol >= 100)) ) vol="1.00" ;;
-			$((vol >= 10)) ) vol="0.$vol" ;;
-			* ) vol="0.0$vol" ;;
+			$(( vol >= 100 ))) vol="1.00" ;;
+			$(( vol >= 10 ))) vol="0.$vol" ;;
+			*) vol="0.0$vol" ;;
 		esac
 		printf "%s\n" "Volume: $vol"
 		}
@@ -50,7 +50,7 @@ if [ -n "$TMUX" ]; then
 			*+) op="+" ;;
 			*-) op="-" ;;
 		esac
-		newvol="${2%$op}"
+		newvol="${2%"$op"}"
 		newvol="${newvol%\%}"
 		case "$newvol" in
 			1.*) newvol="1${newvol#*.}" ;;
@@ -58,12 +58,12 @@ if [ -n "$TMUX" ]; then
 			0.*) newvol="${newvol#*.}" ;;
 		esac
 		newvol="${newvol#0}"
-		[ -z "$op" ] && vol="$newvol" || vol="$((vol $op newvol))"
+		[ -z "$op" ] && vol="$newvol" || vol="$(( vol op newvol ))"
 		case 1 in
-			$((vol >= 100)) ) vol=100 ;;
-			$((vol <= 0)) ) vol=0 ;;
+			$(( vol >= 100 ))) vol=100 ;;
+			$(( vol <= 0 ))) vol=0 ;;
 		esac
-		termux-volume music $((vol * 25 / 100))
+		termux-volume music $(( vol * 25 / 100 ))
 		}
 	setmute() {
 		[ -z "$2" ] && err
@@ -79,5 +79,5 @@ if [ -n "$TMUX" ]; then
 		*) err ;;
 	esac
 else
-	"$PREFIX"/bin/${0##*/} "$@"
+	"$PREFIX/bin/${0##*/}" "$@"
 fi

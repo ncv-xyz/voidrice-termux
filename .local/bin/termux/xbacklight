@@ -9,5 +9,5 @@ for o in $@ ; do case "$o" in
 	-*) shift 2 ;;
 esac ; done
 [ -z "$brightness" ] && exit 1
-brightness="$(( 255 * $brightness / 100 ))"
+brightness="$(( brightness * 255 / 100 ))"
 termux-brightness $brightness
