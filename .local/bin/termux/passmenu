@@ -2,21 +2,21 @@
 
 # passmenu wrapper for Termux
 
-type pass >/dev/null || exit 1
+command -v pass >/dev/null || exit 1
 
-[ "$1" = "--type" ] && typeit=1
+[ "$1" = "--type" ] && type=1
 
 prefix="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
 
-for i in $(ls "$PASSWORD_STORE_DIR") ; do
+for i in $(find "$prefix" -not -name '.*' -type f -printf "%f\n" | sort) ; do
 	password_files="${password_files#\\n}\n${i%.gpg}"
 done
 
 password="$(echo "$password_files" | dmenu)"
 
-[ -z $password ] && exit
+[ -z "$password" ] && exit
 
-if [ -z "$typeit" ]; then
+if [ -z "$type" ]; then
 	pass show -c "$password" 2>/dev/null
 else
 	pass show "$password" \
