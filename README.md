@@ -66,17 +66,17 @@ Current packages for LARBS which are unavailable in Termux:
 - noto-fonts, noto-fonts-emoji
 - ueberzugpp
 - zathura, zathura-pdf-mupdf
-- ~~man-db~~ (substituted for by mandoc)
+- ~~man-db~~ (replaced by mandoc)
 - pipewire-pulse, wireplumber
-- exfat-utils
+- ~~exfat-utils~~ (replaced by exfatprogs)
 - simple-mtpfs
 - polkit
 - unclutter
-- maim
+- ~~maim~~ (replaced by scrot)
 - slock
-- ~~ntp~~ (substituted for by chrony)
-- ~~urlview~~ (substituted for by urlscan)
+- ~~ntp~~ (replaced by chrony)
+- ~~urlview~~ (replaced by urlscan)
 - youtube-viewer
 - libreoffice
 
-Some are unlisted and substituted for by symlinks or scripts.
+Some are unlisted and substituted for by scripts or symlinks to other programs.
