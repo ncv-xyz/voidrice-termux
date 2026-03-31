@@ -4,30 +4,37 @@
 
 if [ -n "$TMUX" ]; then
 
-	for var in "$@" ; do case "$var" in
+	for var in "$@"; do case "$var" in
 		-*) ;;
 		*) args="$args $var" ;;
 	esac done
 	set -- "${args# }"
 
+	# Open audio as usual, but open videos in an app
+	openfile() {
+		case "$(file --mime-type "$(readlink -f "$1")" -b)" in
+			audio/*|video/x-ms-asf) "$PREFIX/bin/mpv" "$@" ;;
+			video/*) termux-share -d "$1" ;;
+		esac
+	}
+
+	# Open url through yt-dlp in the mpv app.
+	openurl() {
+		cmd package list packages 2>/dev/null | grep -q "is.xyz.mpv" >/dev/null \
+			|| { echo "mpv-android must be installed to open links." ; exit 1 ;}
+		am start \
+			-n is.xyz.mpv/.MPVActivity \
+			-a android.intent.action.VIEW \
+			-d "$(yt-dlp -f "best[ext=mp4]" \
+			-g "$1" 2>/dev/null)" >/dev/null
+	}
+
 	# If input is a URL, follow it in the mpv app.
 	case "$1" in
-		http://*|https://*)
-			cmd package list packages 2>/dev/null | grep "is.xyz.mpv" >/dev/null || { echo "mpv-android must be installed to open links." ; exit 1 ;}
-			am start \
-				-n is.xyz.mpv/.MPVActivity \
-				-a android.intent.action.VIEW \
-				-d "$(yt-dlp -f "best[ext=mp4]" \
-				-g "$1" 2>/dev/null)" >/dev/null
-			exit ;;
-	esac
-
-	# Open audio as usual, but open videos in an app
-	case "$(file --mime-type "$(readlink -f "$1")" -b)" in
-		audio/*|video/x-ms-asf) "$PREFIX"/bin/mpv "$@" ;;
-		video/*) termux-share -d "$1" ;;
+		http://*|https://*) openurl "$1" ;;
+		*) openfile "$1" ;;
 	esac
 
 else
-	"$PREFIX"/bin/mpv "$@"
+	"$PREFIX/bin/mpv" "$@"
 fi

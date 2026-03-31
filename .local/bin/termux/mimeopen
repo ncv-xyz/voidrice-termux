@@ -3,15 +3,14 @@
 # mimeopen wrapper for Termux
 
 if [ -n "$TMUX" ]; then
-	for var in "$@" ; do case "$var" in
-		-a|--ask) ask=1 ;;
+	for var in "$@"; do case "$var" in
+		-a|--ask) command="termux-share" ;;
 		-*) ;;
 		*) args="$args $var" ;;
 	esac done
 	set -- "${args# }"
-	file="${1:-$([ -t 0 ] || xargs)}"
-	[ -z "$ask" ] || { termux-share "$file" ; exit ;}
-	termux-share -d "$file"
+	${command:-termux-share -d} \
+		"${1:-$([ -t 0 ] || xargs)}"
 else
-	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
+	"$PREFIX/bin/vendor_perl/mimeopen" "$@"
 fi

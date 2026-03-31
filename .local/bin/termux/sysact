@@ -8,18 +8,18 @@ if [ -n "$TMUX" ]; then
 	lock() {
 		case "${lock##* }" in
 			lock) cp /dev/null "$PREFIX/tmp/lock" ;;
-			unlock) rm -f "$PREFIX/tmp/lock" ;;
+			unlock) rm "$PREFIX/tmp/lock" ;;
 		esac
 		notify-send "${lock}ed."
-		termux-wake-${lock##* }
+		termux-wake-"${lock##* }"
 	}
+	tmuxconf="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"
 	case "$(printf "$lock\n🚪 leave tmux\n♻️ renew termux\n🖥️shutdown" | dmenu -i -p 'Action: ')" in
-		"$lock") lock ;;
-		'🚪 leave tmux') tmux kill-session ;;
-		'♻️ renew termux') termux-reload-settings ;;
-		'🖥️shutdown') kill -TERM $(pidof com.termux) ;;
-		*) exit 1 ;;
+		*lock*) lock ;;
+		*leave*) tmux kill-session ;;
+		*renew*) tmux source "$tmuxconf" 2>/dev/null ;;
+		*shutdown*) kill -TERM "$(pidof com.termux)" ;;
 	esac
 else
-	"$HOME"/.local/bin/sysact
+	"$HOME/.local/bin/sysact"
 fi

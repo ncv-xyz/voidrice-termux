@@ -19,11 +19,11 @@ if [ -n "$TMUX" ]; then
 	esac done
 
 	[ -t 0 ] || items="$(xargs -0)"
-	height="${height:-$(echo -n "$items" | wc -l)}"
+	height="${height:-$(printf %s "$items" | wc -l)}"
 	case 1 in
-		$((height > $(tput lines))) ) height="100%" ;;
-		$((height < 1)) ) height="100%" ; tmux_height="40%" ;;
-		* ) height="$((height + 2))" ;;
+		$((height > $(tput lines)))) height="100%" ;;
+		$((height < 1))) height="100%" ; tmux_height="40%" ;;
+		*) height="$((height + 2))" ;;
 	esac
 
 	# dmenu format
@@ -84,22 +84,22 @@ if [ -n "$TMUX" ]; then
 	# wal colors
 	wal_dmenu="${XDG_CACHE_DIR:-$HOME/.cache}/wal/colors-wal-dmenu.h"
 	if command -v wal >/dev/null 2>&1 && [ -f "$wal_dmenu" ]; then
-		color_nb="${color_nb:-$(grep "SchemeNorm" "$wal_dmenu")}"
+		color_nb="${color_nb:-$(grep SchemeNorm "$wal_dmenu")}"
 		color_nb="${color_nb%\"*}"
 		color_nb="${color_nb##*\"}"
-		color_nf="${color_nf:-$(grep "SchemeNorm" "$wal_dmenu")}"
+		color_nf="${color_nf:-$(grep SchemeNorm "$wal_dmenu")}"
 		color_nf="${color_nf#*\"}"
 		color_nf="${color_nf%%\"*}"
-		color_sb="${color_sb:-$(grep "SchemeSel" "$wal_dmenu")}"
+		color_sb="${color_sb:-$(grep SchemeSel "$wal_dmenu")}"
 		color_sb="${color_sb%\"*}"
 		color_sb="${color_sb##*\"}"
-		color_sf="${color_sf:-$(grep "SchemeSel" "$wal_dmenu")}"
+		color_sf="${color_sf:-$(grep SchemeSel "$wal_dmenu")}"
 		color_sf="${color_sf#*\"}"
 		color_sf="${color_sf%%\"*}"
-		color_ob="$(grep "SchemeOut" "$wal_dmenu")"
+		color_ob="$(grep SchemeOut "$wal_dmenu")"
 		color_ob="${color_ob%\"*}"
 		color_ob="${color_ob##*\"}"
-		color_of="$(grep "SchemeOut" "$wal_dmenu")"
+		color_of="$(grep SchemeOut "$wal_dmenu")"
 		color_of="${color_of#*\"}"
 		color_of="${color_of%%\"*}"
 	fi
@@ -119,13 +119,21 @@ if [ -n "$TMUX" ]; then
 
 	if [ "${0##*/}" = "dmenu_run" ]; then
 		cache="${XDG_CACHE_HOME:-$HOME/.cache}/dmenu_run"
-		[ ! -d "${cache%/*}" ] && mkdir -p "${cache%/*}"
-		echo -n "$PATH" | xargs -d":" -I {} find {} -maxdepth 1 -executable -type f -printf "%P\n" | tee "$cache" >/dev/null 2>&1
-		cat "$cache" | sort -u | fzf | xargs setsid -f >/dev/null 2>&1
+		[ ! -d "${cache%/*}" ] \
+			&& mkdir -p "${cache%/*}"
+		printf %s "$PATH" \
+			| xargs -d":" -I {} find {} \
+			-maxdepth 1 -executable -type f \
+			-printf "%P\n" \
+			| tee "$cache" >/dev/null 2>&1
+		cat "$cache" \
+			| sort -u \
+			| fzf \
+			| xargs setsid -f >/dev/null 2>&1
 	else
 		echo "$items" | fzf
 	fi
 
 else
-	"$PREFIX"/bin/dmenu "$@"
+	"$PREFIX/bin/dmenu" "$@"
 fi

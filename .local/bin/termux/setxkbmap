@@ -6,9 +6,9 @@ if [ -n "$TMUX" ]; then
 			lang="${LANG#*_}"
 			lang="${lang%.*}"
 			lang="$(echo "$lang" | tr "[A-Z]" "[a-z]")"
-			echo "layout:      $lang"
+			printf "%s\n" "layout:      $lang"
 			;;
 	esac
 else
-	"$PREFIX"/bin/setxkbmap "$@"
+	"$PREFIX/bin/setxkbmap" "$@"
 fi

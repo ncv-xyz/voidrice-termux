@@ -2,21 +2,21 @@
 
 # sb-battery wrapper for Termux
 
-status="$(termux-battery-status | grep "status")"
+status="$(termux-battery-status | grep status)"
 status="${status%\"*}"
 status="${status##*\"}"
 
 case "$status" in
-	"FULL") status="⚡" ;;
-	"DISCHARGING") status="🔋" ;;
-	"CHARGING") status="🔌" ;;
+	FULL) status="⚡" ;;
+	DISCHARGING) status="🔋" ;;
+	CHARGING) status="🔌" ;;
 	"NOT CHARGING") status="🛑" ;;
-	"UNKNOWN") status="♻️" ;;
+	UNKNOWN) status="♻️" ;;
 	*) exit 1 ;;
 esac
 
 capacity="$(termux-battery-status | grep percentage)"
-capacity="${capacity#*: }"
+capacity="${capacity##* }"
 capacity="${capacity%,}"
 
 [ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"

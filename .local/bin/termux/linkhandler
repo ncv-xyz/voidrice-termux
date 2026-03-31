@@ -7,5 +7,5 @@ if [ -n "$TMUX" ]; then
 	[ -f "$url" ] && command="termux-share -d"
 	${command:-termux-open-url} "$url" >/dev/null 2>&1
 else
-	"$HOME"/.local/bin/linkhandler "$@"
+	"$HOME/.local/bin/linkhandler" "$@"
 fi
