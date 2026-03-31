@@ -90,11 +90,14 @@ if [ -n "$TERMUX_VERSION" ]; then
 	export PAGER="less"
 	# Fix "ncmpcpp: No such file or directory"
 	export MPD_HOST="${MPD_HOST:-localhost}"
-	# Autostart these programs.
-	autostart="mpd"
-	for program in $autostart; do
-		pidof -sx "$program" || "$program"
-	done >/dev/null 2>&1
 	# Start tmux if not in X server and not already running.
-	{ [ -z "$DISPLAY" ] && [ -z "$TMUX" ] ;} && { unset ZDOTDIR ; exec tmux new-session -A -s $USER >/dev/null 2>&1 ;}
+	if [ -z "$DISPLAY" ] && [ -z "$TMUX" ]; then
+		# Autostart these programs.
+		autostart="mpd"
+		for program in $autostart; do
+			pidof -sx "$program" || "$program"
+		done >/dev/null 2>&1
+		unset ZDOTDIR # Needed to update GPG_TTY for each terminal.
+		exec tmux new -A -s "$USER" >/dev/null 2>&1
+	fi
 fi
