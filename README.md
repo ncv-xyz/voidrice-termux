@@ -22,7 +22,7 @@ made to work in [Termux](https://github.com/termux/termux-app).
 
 ## Usage
 
-These dotfiles and installer are intended to be used with a
+These dotfiles are intended to be used with a
 [pacman install of Termux](https://wiki.termux.com/wiki/Switching_package_manager)
 and [API commands](https://github.com/termux/termux-api) available.
 
