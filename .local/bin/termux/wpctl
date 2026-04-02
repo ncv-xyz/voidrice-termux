@@ -4,30 +4,8 @@
 
 if [ -n "$TMUX" ]; then
 
-	err() { printf "%s\n" \
-		"Usage:" \
-		"	wpctl [OPTION…] COMMAND [COMMAND_OPTIONS] - WirePlumber Control CLI" \
-		" " \
-		"Commands:" \
-		"	status" \
-		"	get-volume ID" \
-		"	inspect ID" \
-		"	set-default ID" \
-		"	set-volume ID VOL[%][-/+]" \
-		"	set-mute ID 1|0|toggle" \
-		"	set-profile ID INDEX" \
-		"	set-route ID INDEX" \
-		"	clear-default [ID]" \
-		"	settings [KEY] [VAL]" \
-		"	set-log-level [ID] LEVEL" \
-		" " \
-		"Help Options:" \
-		"	-h, --help	Show help options" \
-		" " \
-		"Pass -h after a command to see command-specific options" ; exit ;}
-
 	getvolume() {
-		[ -z "$1" ] && err
+		[ -z "$1" ] && exit 1
 		vol="$(termux-volume \
 			| grep -A 1 "music" \
 			| tail -n 1)"
@@ -43,7 +21,7 @@ if [ -n "$TMUX" ]; then
 		}
 
 	setvolume() {
-		[ -z "$2" ] && err
+		[ -z "$2" ] && exit 1
 		vol="$(getvolume 1)"
 		case "${vol#* }" in
 			1.*) vol="1${vol#*.}" ;;
@@ -51,7 +29,7 @@ if [ -n "$TMUX" ]; then
 		esac
 		vol="${vol#0}"
 		case "$2" in
-			*.*%|*[+-][+-]) err ;;
+			*.*%|*[+-][+-]) exit 1 ;;
 			*+) op="+" ;;
 			*-) op="-" ;;
 		esac
@@ -76,7 +54,7 @@ if [ -n "$TMUX" ]; then
 		}
 
 	setmute() {
-		[ -z "$2" ] && err
+		[ -z "$2" ] && exit 1
 		case "$2" in
 			1) termux-volume music 0 ;;
 			toggle) termux-volume music 0 ;;
@@ -87,7 +65,7 @@ if [ -n "$TMUX" ]; then
 		get*volume) getvolume "$2" ;;
 		set*volume) setvolume "$2" "$3" ;;
 		set*mute) setmute "$2" "$3" ;;
-		*) err ;;
+		*) exit 1 ;;
 	esac
 
 else
