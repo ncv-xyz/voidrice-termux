@@ -3,10 +3,10 @@
 # mimeopen wrapper for Termux
 
 if [ -n "$TMUX" ]; then
-	for var in "$@"; do case "$var" in
+	for o in "$@"; do case "$o" in
 		-a|--ask) command="termux-share" ;;
 		-*) ;;
-		*) args="$args $var" ;;
+		*) args="$args $o" ;;
 	esac done
 	set -- "${args# }"
 	${command:-termux-share -d} \

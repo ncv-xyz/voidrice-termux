@@ -3,7 +3,7 @@
 # st wrapper for tmux
 
 if [ -n "$TMUX" ]; then
-	for o in $@; do case "$o" in
+	for o in "$@"; do case "$o" in
 		-[ai]*) shift ;;
 		-*v*) exit ;;
 		-[cfgolw]*) shift 2 ;;

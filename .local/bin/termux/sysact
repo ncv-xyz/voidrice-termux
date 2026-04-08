@@ -14,7 +14,7 @@ if [ -n "$TMUX" ]; then
 		termux-wake-"${lock##* }"
 	}
 	tmuxconf="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"
-	case "$(printf "$lock\n🚪 leave tmux\n♻️ renew termux\n🖥️shutdown" | dmenu -i -p 'Action: ')" in
+	case "$(printf "%s\n" "$lock" "🚪 leave tmux" "♻️ renew termux" "🖥️shutdown" | dmenu -i -p 'Action: ')" in
 		*lock*) lock ;;
 		*leave*) tmux kill-session ;;
 		*renew*) tmux source "$tmuxconf" 2>/dev/null ;;

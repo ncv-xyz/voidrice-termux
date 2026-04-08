@@ -4,7 +4,7 @@
 
 if [ -n "$TMUX" ]; then
 	[ "$1" = "type" ] && shift || exit
-	for o in $@; do case "$o" in
+	for o in "$@"; do case "$o" in
 		--f*) file=1 ; shift ;;
 		--[wd*]) shift 2 ;;
 		-*) shift ;;
