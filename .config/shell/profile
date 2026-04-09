@@ -76,13 +76,12 @@ sudo -n loadkeys "$XDG_DATA_HOME/larbs/ttymaps.kmap" 2>/dev/null
 if [ -n "$TERMUX_VERSION" ]; then
 	# Prepend wrappers to $PATH
 	export PATH="$HOME/.local/bin/termux:$PATH"
-	# Set host and user names.
-	export USER="name" # Set username here.
-	export HOST="$(getprop ro.product.device)" # Set hostname here.
+	# Set username
+	export USER="larbs"
+	# Set hostname
+	export HOST="$(getprop ro.product.device)"
 	export HOSTNAME="$HOST"
-	export USERNAME="$USER"
-	export LOGNAME="$USER"
-	# Pretend to be SSH (for lfub).
+	# Pretend to be SSH (for lfub)
 	export SSH_TTY="$TTY"
 	# Fix "gpg: cannot open '/dev/tty'"
 	export GPG_TTY="$TTY"
