@@ -5,5 +5,5 @@
 case "${1}" in
 	sv|pacman|updatedb) "${@}" ;;
 	make) make PREFIX="${PREFIX:-/usr/local}" "${@}" ;;
-	*) "${PREFIX}/bin/sudo" "$]@}" ;;
+	*) "${PREFIX}/bin/sudo" "$(@}" ;;
 esac
