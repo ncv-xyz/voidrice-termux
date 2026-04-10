@@ -1,14 +1,14 @@
 #!/bin/sh
 
-if [ -n "$TMUX" ]; then
-	case "$1" in
+if [ -n "${TMUX}" ]; then
+	case "${1}" in
 		-q*)
 			lang="${LANG#*_}"
 			lang="${lang%.*}"
-			lang="$(echo "$lang" | tr "[:upper:]" "[:lower:]")"
-			printf "%s\n" "layout:      $lang"
+			lang="$(echo "${lang}" | tr "[:upper:]" "[:lower:]")"
+			printf %s\\n "layout:      ${lang}"
 			;;
 	esac
 else
-	"$PREFIX/bin/setxkbmap" "$@"
+	"${PREFIX}/bin/setxkbmap" "${@}"
 fi

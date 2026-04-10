@@ -2,21 +2,21 @@
 
 # setbg script wrapper for Termux
 
-"$HOME/.local/bin/setbg" "$@"
+"${HOME}/.local/bin/setbg" "${@}"
 
-[ -n "$TMUX" ] || exit
+[ -n "${TMUX}" ] || exit
 
-termuxconf="${XDG_CONFIG_HOME:-$HOME/.config}/termux/colors.properties"
-tmuxconf="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"
+termuxconf="${XDG_CONFIG_HOME:-${HOME}/.config}/termux/colors.properties"
+tmuxconf="${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"
 
 if command -v wal >/dev/null 2>&1; then
-	mv -n "$termuxconf" "$termuxconf.bak"
-	xargs sh -c 'printf "color0=%s\\ncolor1=%s\\ncolor2=%s\\ncolor3=%s\\ncolor4=%s\\ncolor5=%s\\ncolor6=%s\\ncolor7=%s\\ncolor8=%s\\ncolor9=%s\\ncolor10=%s\\ncolor11=%s\\ncolor12=%s\\ncolor13=%s\\ncolor14=%s\\ncolor15=%s\\n\\ncursor=%s\\nbackground=%s\\nforeground=%s\\n" "${0}" "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" "${10}" "${11}" "${12}" "${13}" "${14}" "${15}" "${6}" "${0}" "${6}"' < "${XDG_CACHE_HOME:-$HOME/.cache}/wal/colors" > "$termuxconf"
-	tmux source-file ~/.config/tmux/tmux.conf >/dev/null 2>&1
+	mv -n "${termuxconf}" "${termuxconf}.bak"
+	xargs sh -c 'printf "color0=%s\\ncolor1=%s\\ncolor2=%s\\ncolor3=%s\\ncolor4=%s\\ncolor5=%s\\ncolor6=%s\\ncolor7=%s\\ncolor8=%s\\ncolor9=%s\\ncolor10=%s\\ncolor11=%s\\ncolor12=%s\\ncolor13=%s\\ncolor14=%s\\ncolor15=%s\\n\\ncursor=%s\\nbackground=%s\\nforeground=%s\\n" "${0}" "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" "${10}" "${11}" "${12}" "${13}" "${14}" "${15}" "${6}" "${0}" "${6}"' <"${XDG_CACHE_HOME:-${HOME}/.cache}/wal/colors" >"${termuxconf}"
+	tmux source-file "${tmuxconf}" >/dev/null 2>&1
 	termux-reload-settings
-elif [ -f "$termuxconf.bak" ]; then
-	rm "$termuxconf"
-	mv "$termuxconf.bak" "$termuxconf"
-	tmux source-file "$tmuxconf" 2>/dev/null
+elif [ -f "${termuxconf}.bak" ]; then
+	rm "${termuxconf}"
+	mv "${termuxconf}.bak" "${termuxconf}"
+	tmux source-file "${tmuxconf}" 2>/dev/null
 	termux-reload-settings
 fi

@@ -2,72 +2,71 @@
 
 # wireplumber wrapper for Termux
 
-if [ -n "$TMUX" ]; then
+if [ -n "${TMUX}" ]; then
 
 	getvolume() {
-		[ -z "$1" ] && exit 1
-		vol="$(termux-volume \
-			| grep -A 1 "music" \
-			| tail -n 1)"
+		[ -z "${1}" ] && exit 1
+		vol="$(termux-volume | grep -A 1 "music")"
 		vol="${vol##* }"
 		vol="${vol%,}"
-		vol="$(( vol * 100 / 25 ))"
+		vol=$(( vol * 100 / 25 ))
 		case 1 in
 			$(( vol >= 100 ))) vol="1.00" ;;
-			$(( vol >= 10 ))) vol="0.$vol" ;;
-			*) vol="0.0$vol" ;;
+			$(( vol >= 10 ))) vol="0.${vol}" ;;
+			*) vol="0.0${vol}" ;;
 		esac
-		printf "%s\n" "Volume: $vol"
+		printf %s\\n "Volume: ${vol}"
 		}
 
 	setvolume() {
-		[ -z "$2" ] && exit 1
+		[ -z "${2}" ] && exit 1
 		vol="$(getvolume 1)"
-		case "${vol#* }" in
+		vol=${vol#* }
+		case "${vol}" in
 			1.*) vol="1${vol#*.}" ;;
 			0.*) vol="${vol#*.}" ;;
 		esac
 		vol="${vol#0}"
-		case "$2" in
+		case "${2}" in
 			*.*%|*[+-][+-]) exit 1 ;;
 			*+) op="+" ;;
 			*-) op="-" ;;
 		esac
-		newvol="${2%"$op"}"
+		newvol="${2%"${op}"}"
 		newvol="${newvol%\%}"
-		case "$newvol" in
+		case "${newvol}" in
 			1.*) newvol="1${newvol#*.}" ;;
 			*.[1-9]) newvol="${newvol#*.}0" ;;
 			0.*) newvol="${newvol#*.}" ;;
 		esac
 		newvol="${newvol#0}"
-		case "$op" in
-			+) vol="$(( vol + newvol ))" ;;
-			-) vol="$(( vol - newvol ))" ;;
-			*) vol="$newvol" ;;
+		case "${op}" in
+			+) vol=$(( vol + newvol )) ;;
+			-) vol=$(( vol - newvol )) ;;
+			*) vol="${newvol}" ;;
 		esac
 		case 1 in
-			"$(( vol >= 100 ))") vol=100 ;;
-			"$(( vol <= 0 ))") vol=0 ;;
+			$(( vol >= 100 ))) vol=100 ;;
+			$(( vol <= 0 ))) vol=0 ;;
 		esac
 		termux-volume music $(( vol * 25 / 100 ))
 		}
 
 	setmute() {
-		[ -z "$2" ] && exit 1
-		case "$2" in
+		[ -z "${2}" ] && exit 1
+		case "${2}" in
 			1) termux-volume music 0 ;;
 			toggle) termux-volume music 0 ;;
 		esac
 		}
 
-	case "$1" in
-		get*volume) getvolume "$2" ;;
-		set*volume) setvolume "$2" "$3" ;;
-		set*mute) setmute "$2" "$3" ;;
+	case "${1}" in
+		get*volume) getvolume "${2}" ;;
+		set*volume) setvolume "${2}" "${3}" ;;
+		set*mute) setmute "${2}" "${3}" ;;
 		*) exit 1 ;;
 	esac
 
 else
-	"$PREFIX/bin/${0##*/}" "$@"
+	"${PREFIX}/bin/${0##*/}" "${@}"
 fi

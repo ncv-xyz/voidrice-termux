@@ -5,7 +5,7 @@
 # Prints battery, ite percentage remaining and an emoji corresponding to charge
 # status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
 
-case $BLOCK_BUTTON in
+case ${BLOCK_BUTTON} in
 	3) notify-send "🔋 Battery module" "🔋: discharging
 🛑: not charging
 ♻: stagnant charge
@@ -15,14 +15,14 @@ case $BLOCK_BUTTON in
 - Scroll to change adjust xbacklight." ;;
 	4) xbacklight -inc 10 ;;
 	5) xbacklight -dec 10 ;;
-	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+	6) setsid -f "${TERMINAL}" -e "${EDITOR}" "${0}" ;;
 esac
 
 status="$(termux-battery-status | grep status)"
 status="${status%\"*}"
 status="${status##*\"}"
 
-case "$status" in
+case "${status}" in
 	FULL) status="⚡" ;;
 	DISCHARGING) status="🔋" ;;
 	CHARGING) status="🔌" ;;
@@ -35,7 +35,7 @@ capacity="$(termux-battery-status | grep percentage)"
 capacity="${capacity##* }"
 capacity="${capacity%,}"
 
-[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
+[ "${status}" = "🔋" ] && [ "${capacity}" -le 25 ] && warn="❗"
 
-printf "%s%s%d%%" "$status" "$warn" "$capacity"
-printf "\\n"
+printf %s%s%d%% "${status}" "${warn}" "${capacity}"
+printf \\n

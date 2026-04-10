@@ -2,24 +2,24 @@
 
 # sysact script wrapper for Termux
 
-if [ -n "$TMUX" ]; then
+if [ -n "${TMUX}" ]; then
 	lock="🔒 wake lock"
-	[ -f "$PREFIX/tmp/lock" ] && lock="🔓 wake unlock"
+	[ -f "${PREFIX}/tmp/lock" ] && lock="🔓 wake unlock"
 	lock() {
 		case "${lock##* }" in
-			lock) cp /dev/null "$PREFIX/tmp/lock" ;;
-			unlock) rm "$PREFIX/tmp/lock" ;;
+			lock) cp /dev/null "${PREFIX}/tmp/lock" ;;
+			unlock) rm "${PREFIX}/tmp/lock" ;;
 		esac
 		notify-send "${lock}ed."
 		termux-wake-"${lock##* }"
 	}
-	tmuxconf="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"
-	case "$(printf "%s\n" "$lock" "🚪 leave tmux" "♻️ renew termux" "🖥️shutdown" | dmenu -i -p 'Action: ')" in
+	tmuxconf="${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"
+	case "$(printf %s\\n "${lock}" "🚪 leave tmux" "♻️ renew termux" "🖥️shutdown" | dmenu -i -p 'Action: ')" in
 		*lock*) lock ;;
 		*leave*) tmux kill-session ;;
-		*renew*) tmux source "$tmuxconf" 2>/dev/null ;;
+		*renew*) tmux source "${tmuxconf}" 2>/dev/null ;;
 		*shutdown*) kill -TERM "$(pidof com.termux)" ;;
 	esac
 else
-	"$HOME/.local/bin/sysact"
+	"${HOME}/.local/bin/sysact"
 fi

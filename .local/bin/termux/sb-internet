@@ -6,8 +6,8 @@
 # Show 🌐 if connected to ethernet or ❎ if none.
 # Show 🔒 if a vpn connection is active
 
-case $BLOCK_BUTTON in
-	1) "$TERMINAL" -e nmtui ;;
+case ${BLOCK_BUTTON} in
+	1) "${TERMINAL}" -e nmtui ;;
 	3) notify-send "🌐 Internet module" "\- Click to connect
 ❌: wifi disabled
 📡: no wifi connection
@@ -16,25 +16,25 @@ case $BLOCK_BUTTON in
 🌐: ethernet working
 🔒: vpn is active
 " ;;
-	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+	6) setsid -f "${TERMINAL}" -e "${EDITOR}" "${0}" ;;
 esac
 
 state="$(termux-wifi-connectioninfo | grep supplicant)"
 state="${state%\"*}"
 state="${state##*\"}"
 
-case "$state" in
+case "${state}" in
 	COMPLETED)
 		rssi="$(termux-wifi-connectioninfo | grep rssi)"
 		rssi="${rssi##* }"
 		rssi="${rssi%,}"
-		quality="$(( ( rssi + 100 ) * 100 / 80 ))"
-		[ $quality -gt 100 ] && quality=100
-		wifiicon="📶 $quality% "
+		quality=$(( ( rssi + 100 ) * 100 / 80 ))
+		[ ${quality} -gt 100 ] && quality=100
+		wifiicon="📶 ${quality}% "
 	;;
 	DISCONNECTED) wifiicon="📡 " ;;
 	UNINITIALIZED) ;;
 	*) wifiicon="❌ " ;;
 esac
 
-printf "%s%s\n" "$wifiicon" "❎"
+printf %s%s\\n "${wifiicon}" "❎"

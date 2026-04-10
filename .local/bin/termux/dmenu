@@ -2,35 +2,35 @@
 
 # dmenu wrapper for fzf
 
-if [ -n "$TMUX" ]; then
+if [ -n "${TMUX}" ]; then
 
-	for o in "$@"; do case "$o" in
-		-b) layout=default ; shift ;;
-		-i) case="-i" ; shift ;;
-		-l) height="$2" ; shift 2 ;;
-		-p) prompt="$2" ; shift 2 ;;
+	for o in "${@}"; do case "${o}" in
+		-b) layout="default"; shift ;;
+		-i) case="-i"; shift ;;
+		-l) height="${2}"; shift 2 ;;
+		-p) prompt="${2}"; shift 2 ;;
 		-f) shift ;;
-		-nb) color_nb="$2" ; shift 2 ;;
-		-nf) color_nf="$2" ; shift 2 ;;
-		-sb) color_sb="$2" ; shift 2 ;;
-		-sf) color_sf="$2" ; shift 2 ;;
+		-nb) color_nb="${2}"; shift 2 ;;
+		-nf) color_nf="${2}"; shift 2 ;;
+		-sb) color_sb="${2}"; shift 2 ;;
+		-sf) color_sf="${2}"; shift 2 ;;
 		-[mw]) shift 2 ;;
 		-*) shift ;;
 	esac done
 
 	[ -t 0 ] || items="$(xargs -0)"
-	height="${height:-$(printf %s "$items" | wc -l)}"
+	height="${height:-$(printf %s "${items}" | wc -l)}"
 	case 1 in
-		$((height > $(tput lines)))) height="100%" ;;
-		$((height < 1))) height="100%" ; tmux_height="40%" ;;
-		*) height="$((height + 2))" ;;
+		$(( height > $(tput lines) ))) height="100%" ;;
+		$(( height < 1 ))) height="100%"; tmux_height="40%" ;;
+		*) height=$(( height + 2 )) ;;
 	esac
 
 	# dmenu format
 	FZF_DEFAULT_OPTS="--no-info \
 		--no-separator \
 		--no-scrollbar \
-		--prompt='$prompt' \
+		--prompt='${prompt}' \
 		--gutter=' ' \
 		--pointer='' \
 		--ellipsis='' \
@@ -39,13 +39,13 @@ if [ -n "$TMUX" ]; then
 		--raw \
 		--border=none \
 		--layout=${layout:-reverse} \
-		--height=$height \
-		--tmux=top,100%,${tmux_height:-$height} \
+		--height=${height} \
+		--tmux=top,100%,${tmux_height:-${height}} \
 		${case:-+i} \
 		--preview-window=''"
 
 	# dmenu keybinds
-	FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} \
 		--bind=change:best \
 		--bind=tab:yank \
 		--bind=ctrl-i:yank \
@@ -82,30 +82,30 @@ if [ -n "$TMUX" ]; then
 		--bind=alt-k:page-up"
 
 	# wal colors
-	wal_dmenu="${XDG_CACHE_DIR:-$HOME/.cache}/wal/colors-wal-dmenu.h"
-	if command -v wal >/dev/null 2>&1 && [ -f "$wal_dmenu" ]; then
-		color_nb="${color_nb:-$(grep SchemeNorm "$wal_dmenu")}"
+	wal_dmenu="${XDG_CACHE_DIR:-${HOME}/.cache}/wal/colors-wal-dmenu.h"
+	if command -v wal >/dev/null 2>&1 && [ -f "{${wal_dmenu}}" ]; then
+		color_nb="${color_nb:-$(grep SchemeNorm "${wal_dmenu}")}"
 		color_nb="${color_nb%\"*}"
 		color_nb="${color_nb##*\"}"
-		color_nf="${color_nf:-$(grep SchemeNorm "$wal_dmenu")}"
+		color_nf="${color_nf:-$(grep SchemeNorm "${wal_dmenu}")}"
 		color_nf="${color_nf#*\"}"
 		color_nf="${color_nf%%\"*}"
-		color_sb="${color_sb:-$(grep SchemeSel "$wal_dmenu")}"
+		color_sb="${color_sb:-$(grep SchemeSel "${wal_dmenu}")}"
 		color_sb="${color_sb%\"*}"
 		color_sb="${color_sb##*\"}"
-		color_sf="${color_sf:-$(grep SchemeSel "$wal_dmenu")}"
+		color_sf="${color_sf:-$(grep SchemeSel "${wal_dmenu}")}"
 		color_sf="${color_sf#*\"}"
 		color_sf="${color_sf%%\"*}"
-		color_ob="$(grep SchemeOut "$wal_dmenu")"
+		color_ob="$(grep SchemeOut "${wal_dmenu}")"
 		color_ob="${color_ob%\"*}"
 		color_ob="${color_ob##*\"}"
-		color_of="$(grep SchemeOut "$wal_dmenu")"
+		color_of="$(grep SchemeOut "${wal_dmenu}")"
 		color_of="${color_of#*\"}"
 		color_of="${color_of%%\"*}"
 	fi
 
 	# dmenu colors
-	FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} \
 		--color=list-fg:${color_nf:-#bbbbbb} \
 		--color=hl:${color_nf:-#bbbbbb} \
 		--color=prompt:${color_nf:-#bbbbbb}:regular \
@@ -118,22 +118,22 @@ if [ -n "$TMUX" ]; then
 		--color=marker:${color_ob:-#00ffff}"
 
 	if [ "${0##*/}" = "dmenu_run" ]; then
-		cache="${XDG_CACHE_HOME:-$HOME/.cache}/dmenu_run"
+		cache="${XDG_CACHE_HOME:-${HOME}/.cache}/dmenu_run"
 		[ ! -d "${cache%/*}" ] \
 			&& mkdir -p "${cache%/*}"
-		printf %s "$PATH" \
+		printf %s "${PATH}" \
 			| xargs -d":" -I {} find {} \
 			-maxdepth 1 -executable -type f \
 			-printf "%P\n" \
-			| tee "$cache" >/dev/null 2>&1
-		cat "$cache" \
+			| tee "${cache}" >/dev/null 2>&1
+		cat "${cache}" \
 			| sort -u \
 			| fzf \
 			| xargs setsid -f >/dev/null 2>&1
 	else
-		echo "$items" | fzf
+		echo "${items}" | fzf
 	fi
 
 else
-	"$PREFIX/bin/dmenu" "$@"
+	"${PREFIX}/bin/dmenu" "${@}"
 fi

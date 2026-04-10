@@ -2,18 +2,18 @@
 
 # xdotool wrapper for Termux
 
-if [ -n "$TMUX" ]; then
-	[ "$1" = "type" ] && shift || exit
-	for o in "$@"; do case "$o" in
+if [ -n "${TMUX}" ]; then
+	[ "${1}" = "type" ] && shift || exit
+	for o in "${@}"; do case "${o}" in
 		--f*) file=1 ; shift ;;
 		--[wd*]) shift 2 ;;
 		-*) shift ;;
 	esac done
-	[ -z "$file" ] \
+	[ -z "${file}" ] \
 		|| input="$(cat "${1:-$([ -t 0 ] || xargs)}")"
 	input="${input:-${@:-$([ -t 0 ] || xargs)}}"
-	[ -z "$input" ] \
-		|| termux-clipboard-set "$input"
+	[ -z "${input}" ] \
+		|| termux-clipboard-set "${input}"
 else
-	"$PREFIX/bin/xdotool" "$@"
+	"${PREFIX}/bin/xdotool" "${@}"
 fi

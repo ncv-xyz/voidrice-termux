@@ -2,22 +2,22 @@
 
 # notify-send wrapper for tmux
 
-if [ -n "$TMUX" ]; then
-	for o in "$@"; do case "$o" in
-		-u|--u*) urgency="$2" ; shift 2 ;;
+if [ -n "${TMUX}" ]; then
+	for o in "${@}"; do case "${o}" in
+		-u|--u*) urgency="${2}"; shift 2 ;;
 		-[aAtichr]|--[aticr]*|--hi*) shift 2 ;;
 		-?|--h*) exit ;;
 		-*) shift ;;
 	esac done
-	[ -z "$1" ] && exit 1
-	[ -n "$2" ] && summary="#[bold]$1#[none] "
-	body=" $summary${2:-$1}"
+	[ -z "${1}" ] && exit 1
+	[ -n "${2}" ] && summary="#[bold]${1}#[none] "
+	body=" ${summary}${2:-${1}}"
 	color="$(tmux display -p "#{@dunst${urgency:-normal}color}")"
 	background="${color#*bg=}"
 	background="${background%%[ ,]*}"
-	body="#[$color]$body#[fill=$background]"
+	body="#[${color}]${body}#[fill=${background}]"
 	timeout="$(tmux display -p "#{@dunst${urgency:-normal}timeout}")"
-	tmux display -Cd ${timeout:-0} "$body"
+	tmux display -Cd "${timeout:-0}" "${body}"
 else
-	"$PREFIX/bin/notify-send" "$@"
+	"${PREFIX}/bin/notify-send" "${@}"
 fi

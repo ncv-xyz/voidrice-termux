@@ -2,19 +2,19 @@
 
 # xclip wrapper for Termux
 
-if [ -n "$TMUX" ]; then
-	for o in "$@"; do case "$o" in
+if [ -n "${TMUX}" ]; then
+	for o in "${@}"; do case "${o}" in
 		-h*|-vers*) exit ;;
 		-o*) clip="out" ;;
-		-f*) filter="$2" ; shift 2 ;;
+		-f*) filter="${2}"; shift 2 ;;
 		-[sltd]*) shift 2 ;;
 		-*) shift ;;
 	esac done
-	case "${clip:-in}" in
-		in) termux-clipboard-set "$@" ;;
-		out) termux-clipboard-get ; exit ;;
+	case "${clip}" in
+		out) termux-clipboard-get; exit ;;
+		*) termux-clipboard-set "${@}" ;;
 	esac
-	[ -z "$filter" ] || echo "$@"
+	[ -z "${filter}" ] || echo "${@}"
 else
-	"$PREFIX/bin/xclip" "$@"
+	"${PREFIX}/bin/xclip" "${@}"
 fi
