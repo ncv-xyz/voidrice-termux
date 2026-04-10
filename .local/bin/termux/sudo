@@ -3,7 +3,7 @@
 # sudo wrapper for Termux
 
 case "$1" in
-	sv|pacman) "$@" ;;
+	sv|pacman|updatedb) "$@" ;;
 	make) make PREFIX="${PREFIX:-/usr/local}" "$@" ;;
 	*) "$PREFIX/bin/sudo" "$@" ;;
 esac
