@@ -3,8 +3,8 @@
 # sysact script wrapper for Termux
 
 if [ -n "${TMUX}" ]; then
-	lock="🔒 wake lock"
-	[ -f "${PREFIX}/tmp/lock" ] && lock="🔓 wake unlock"
+	lock='🔒 wake lock'
+	[ -f "${PREFIX}/tmp/lock" ] && lock='🔓 wake unlock'
 	lock() {
 		case "${lock##* }" in
 			lock) cp /dev/null "${PREFIX}/tmp/lock" ;;
@@ -14,7 +14,7 @@ if [ -n "${TMUX}" ]; then
 		termux-wake-"${lock##* }"
 	}
 	tmuxconf="${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"
-	case "$(printf %s\\n "${lock}" "🚪 leave tmux" "♻️ renew termux" "🖥️shutdown" | dmenu -i -p 'Action: ')" in
+	case "$(printf %s\\n "${lock}" '🚪 leave tmux' '♻️ renew termux' '🖥️shutdown' | dmenu -i -p 'Action: ')" in
 		*lock*) lock ;;
 		*leave*) tmux kill-session ;;
 		*renew*) tmux source "${tmuxconf}" 2>/dev/null ;;

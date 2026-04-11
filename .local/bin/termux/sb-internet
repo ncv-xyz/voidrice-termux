@@ -8,14 +8,13 @@
 
 case ${BLOCK_BUTTON} in
 	1) "${TERMINAL}" -e nmtui ;;
-	3) notify-send "🌐 Internet module" "\- Click to connect
+	3) notify-send '🌐 Internet module' '- Click to connect
 ❌: wifi disabled
 📡: no wifi connection
 📶: wifi connection with quality
 ❎: no ethernet
 🌐: ethernet working
-🔒: vpn is active
-" ;;
+🔒: vpn is active' ;;
 	6) setsid -f "${TERMINAL}" -e "${EDITOR}" "${0}" ;;
 esac
 
@@ -32,9 +31,9 @@ case "${state}" in
 		[ ${quality} -gt 100 ] && quality=100
 		wifiicon="📶 ${quality}% "
 	;;
-	DISCONNECTED) wifiicon="📡 " ;;
+	DISCONNECTED) wifiicon='📡 ' ;;
 	UNINITIALIZED) ;;
-	*) wifiicon="❌ " ;;
+	*) wifiicon='❌ ' ;;
 esac
 
-printf %s%s\\n "${wifiicon}" "❎"
+printf %s%s\\n "${wifiicon}" '❎'

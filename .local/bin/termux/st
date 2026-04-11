@@ -9,11 +9,11 @@ if [ -n "${TMUX}" ]; then
 		-[cfgolw]*) shift 2 ;;
 		-n) name="${2}"; shift 2 ;;
 		-[tT]) title="${2}"; shift 2 ;;
-		-e) command="${2}"; shift 2 ;;
+		-e) cmd="${2}"; shift 2 ;;
 	esac done
 	name="${name:-"${TERM}"}"
 	title="${title:-st}"
-	args="${command} ${*}"
+	args="${cmd} ${*}"
 	args="${args# }"
 	tmux \
 		set @shcmd "${args}" \; \

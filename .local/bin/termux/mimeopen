@@ -3,7 +3,7 @@
 # mimeopen wrapper for Termux
 
 if [ -n "${TMUX}" ]; then
-	cmd="termux-share -d"
+	cmd='termux-share -d'
 	for o in "${@}"; do case "${o}" in
 		-a|--ask) cmd="${cmd% *}" ;;
 		-*) opts="${opts} ${o}" ;;

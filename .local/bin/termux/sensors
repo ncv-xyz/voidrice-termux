@@ -6,4 +6,4 @@ temp="$(termux-battery-status | grep temperature)"
 temp="${temp#*: }"
 temp="${temp%,}"
 
-printf "Core 0:   +${temp}°C\n"
+printf %s\\n "Core 0:   +${temp}°C"

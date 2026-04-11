@@ -5,7 +5,7 @@ if [ -n "${TMUX}" ]; then
 		-q*)
 			lang="${LANG#*_}"
 			lang="${lang%.*}"
-			lang="$(echo "${lang}" | tr "[:upper:]" "[:lower:]")"
+			lang="$(printf %s "${lang}" | tr '[:upper:]' '[:lower:]')"
 			printf %s\\n "layout:      ${lang}"
 			;;
 	esac

@@ -6,12 +6,12 @@ if [ -n "${TMUX}" ]; then
 
 	getvolume() {
 		[ -z "${1}" ] && exit 1
-		vol="$(termux-volume | grep -A 1 "music")"
+		vol="$(termux-volume | grep -A 1 music)"
 		vol="${vol##* }"
 		vol="${vol%,}"
 		vol=$(( vol * 100 / 25 ))
 		case 1 in
-			$(( vol >= 100 ))) vol="1.00" ;;
+			$(( vol >= 100 ))) vol='1.00' ;;
 			$(( vol >= 10 ))) vol="0.${vol}" ;;
 			*) vol="0.0${vol}" ;;
 		esac
@@ -29,8 +29,8 @@ if [ -n "${TMUX}" ]; then
 		vol="${vol#0}"
 		case "${2}" in
 			*.*%|*[+-][+-]) exit 1 ;;
-			*+) op="+" ;;
-			*-) op="-" ;;
+			*+) op='+' ;;
+			*-) op='-' ;;
 		esac
 		newvol="${2%"${op}"}"
 		newvol="${newvol%\%}"

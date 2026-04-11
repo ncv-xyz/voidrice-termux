@@ -3,9 +3,10 @@
 # linkhandler wrapper for Termux
 
 if [ -n "${TMUX}" ]; then
+	cmd='termux-open-url'
 	url="${1:-$(termux-clipboard-get)}"
-	[ -f "${url}" ] && command="termux-share -d"
-	${command:-termux-open-url} "${url}" >/dev/null 2>&1
+	[ -f "${url}" ] && cmd='termux-share -d'
+	${cmd} "${url}" >/dev/null 2>&1
 else
 	"${HOME}/.local/bin/linkhandler" "${@}"
 fi
