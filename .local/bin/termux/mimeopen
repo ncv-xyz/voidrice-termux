@@ -6,10 +6,13 @@ if [ -n "${TMUX}" ]; then
 	cmd="termux-share -d"
 	for o in "${@}"; do case "${o}" in
 		-a|--ask) cmd="${cmd% *}" ;;
-		-*) ;;
+		-*) opts="${opts} ${o}" ;;
 		*) args="${args} ${o}" ;;
 	esac done
 	set -- "${args# }"
+	[ "${0##*/}" = mpv ] && case "$(file --mime-type "$(readlink -f "${1}")" -b)" in
+		audio/*|video/x-ms-asf) cmd="${PREFIX}/bin/mpv ${opts# }" ;;
+	esac
 	${cmd} "${1:-$([ -t 0 ] || xargs)}"
 else
 	"${PREFIX}/bin/${0##*/}" "${@}"
