@@ -3,12 +3,13 @@
 # sysact script wrapper for Termux
 
 if [ -n "${TMUX}" ]; then
+	lockfile="${XDG_CACHE_HOME:-$HOME/.cache}/termux_lock"
 	lock='🔒 wake lock'
-	[ -f "${PREFIX}/tmp/lock" ] && lock='🔓 wake unlock'
+	[ -f "${lockfile}" ] && lock='🔓 wake unlock'
 	lock() {
 		case "${lock##* }" in
-			lock) cp /dev/null "${PREFIX}/tmp/lock" ;;
-			unlock) rm "${PREFIX}/tmp/lock" ;;
+			lock) cp /dev/null "${lockfile}" ;;
+			unlock) rm "${lockfile}" ;;
 		esac
 		notify-send "${lock}ed."
 		termux-wake-"${lock##* }"
