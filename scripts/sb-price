@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# sb-price wrapper for Termux
+
+[ -z "$1" ] && exit 1
+
+url="${CRYPTOURL:-rate.sx}"
+target="${1%%-*}"
+denom="${1##*-}"
+name="${2:-$1}"
+icon="${3:-💰}"
+
+case "$denom" in
+	"$target"|usd ) denom="usd"; symb="$" ;;
+	gbp ) symb="£" ;;
+	eur ) symb="€" ;;
+	btc ) symb="" ;;
+esac
+
+interval="@14d"
+dir="${XDG_CACHE_HOME:-$HOME/.cache}/crypto-prices"
+pricefile="$dir/$target-$denom"
+chartfile="$dir/$target-$denom-chart"
+
+[ -d "$dir" ] || mkdir -p "$dir"
+
+checkprice() { [ "$(stat -c %y "$pricefile" 2>/dev/null | cut -d" " -f1)" = "$(date '+%Y-%m-%d')" ] ;}
+
+updateprice() {
+	curl -sf \
+		--fail-early \
+		"${denom}.${url}/1${target}" \
+		"${denom}.${url}/${target}${interval}" \
+		--output "$pricefile" \
+		--output "$chartfile" \
+		&& touch "$pricefile" "$chartfile"
+}
+
+checkprice || updateme=1
+
+if [ -n "$updateme" ]; then
+	[ -n "$4" ] && {
+		tries=0; while [ $tries -ne 100 ]; do
+			updateprice && break \
+				|| { tries=$(( tries + 1 ))
+				sleep .1 ;}
+			done ;} || updateprice
+fi
+
+[ -f "$pricefile" ] && printf "%s%s%0.2f\n" "$icon" "$symb" "$(cat "$pricefile")"

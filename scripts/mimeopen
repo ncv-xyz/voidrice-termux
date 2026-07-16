@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# mimeopen wrapper for Termux
+
+for o in "$@"; do case "$o" in
+	-a|--ask ) [ "${0##*/}" = nsxiv ] \
+		|| cmd="termux-share" ;;
+	--audio-display=no ) audio=1 ;;
+	-* ) opts="$opts $o" ;;
+	* ) arg="${arg:-$o}" ;;
+esac done
+
+[ -z "$arg" ] && arg="$([ -t 0 ] || cat)"
+
+[ -z "$audio" ] || cmd="$PREFIX/bin/mpv $opts"
+
+${cmd:-termux-share -d} "$arg"

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# loginctl wrapper for Termux
+
+termuxexit() {
+	pid="$(pstree -p | head -n 1)"
+	pid="${pid#*\(}"
+	pid="${pid#*\(}"
+	pid="${pid%%\)*}"
+	kill -TERM "$pid"
+}
+
+case "$1" in
+	reboot ) termux-reload-settings ;;
+	poweroff ) termuxexit ;;
+	hibernate|suspend ) ;;
+	* ) exit 1 ;;
+esac

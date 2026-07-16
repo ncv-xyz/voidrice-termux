@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# sb-iplocate wrapper for Termux
+
+ifinstalled "libmaxminddb-tools" || exit 1
+
+addr="$(tries=0; while [ $tries -ne 100 ]; do
+	curl -sf api.ipify.org && break \
+		|| { tries=$(( tries + 1 ))
+		sleep .1 ;}
+	done)"
+
+[ -z "$addr" ] && exit
+
+addr="$(mmdblookup \
+	-f "$PREFIX/share/GeoIP/GeoLite2-Country.mmdb" \
+	-i "$addr" country names "${LANG%_*}")"
+
+name="${addr#*\"}"
+name="${name%\"*}"
+
+flag="$(grep "flag: $name" "${XDG_DATA_HOME:-$HOME/.local/share}/larbs/chars/emoji")"
+flag="${flag%% *}"
+
+printf "%s %s\n" "$flag" "$name"

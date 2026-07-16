@@ -1,0 +1,78 @@
+#!/bin/sh
+
+# pacman wrapper for apt
+
+for o in "$@"; do case "$o" in
+	-[A-Z]* ) flag="$o" ;;
+	--noconfirm ) noconfirm=1 ;;
+	--asexplicit ) asexplicit=1 ;;
+	--asdeps ) asdeps=1 ;;
+	[!-]* ) args="$args $o" ;;
+esac; done
+
+set -- $args
+
+flag="${flag:--Syu}"
+
+apt_unrequired() {
+	pacs="$(apt list -qq --installed 2>/dev/null \
+		| sed "s|/.*||")"
+	deps="$(apt-cache depends $pacs 2>/dev/null \
+		| sed "/^ [ |]D.*/!d;s/.* //")"
+	for x in $deps; do
+		del="$del/^$x$/d;"
+	done
+	unrequired="$(printf %s "$pacs" | sed "$del")"
+	for x in $unrequired; do
+		print="$print/^$x$/p;"
+	done
+	case "$1" in
+		show* )
+			apt-mark "$1" \
+				| sed -n "$print"
+			;;
+		* )
+			apt list -qq --installed 2>/dev/null \
+				| sed -n "s|/.*||;$print"
+			;;
+	esac
+}
+
+case "$flag" in
+	-D* ) database=1 ;;
+	-Q*d* ) cmd="apt-mark showauto" ;;
+	-Q*e* ) cmd="apt-mark showmanual" ;;
+	-[QS]*s* ) cmd="apt search -qq" ;;
+	-[QS]*i* ) cmd="apt show" ;;
+	-Q*l* ) cmd="dpkg -L" ;;
+	-Q*o* ) cmd="dpkg -S" ;;
+	-Q*u* ) cmd="apt list -qq --upgradable" ;;
+	-Q* ) cmd="apt list -qq --installed" ;;
+	-R* ) cmd="apt autoremove --purge" ;;
+	-S*c* ) cmd="apt-get autoclean" ;;
+	-S*l* ) cmd="apt list -qq" ;;
+	-S*u* ) cmd="apt full-upgrade" ;;
+	-S* ) cmd="apt install" ;;
+	* ) exit 1 ;;
+esac
+
+case "$flag" in
+	-[QS]*i*i* ) cmd="apt-cache rdepends" ;;
+	-Q*t* ) cmd="apt_unrequired ${cmd#* }" ;;
+	-S*w* ) cmd="$cmd -U --download-only" ;;
+	-S*c*c* ) cmd="apt clean" ;;
+	-*y* ) cmd="$cmd -U" ;;
+esac
+
+[ -n "$asdeps" ] \
+	&& [ -z "$database" ] \
+	&& cmd="$cmd --mark-auto"
+
+[ -z "$database" ] || case 1 in
+	"$asexplicit" ) cmd="apt-mark manual" ;;
+	"$asdeps" ) cmd="apt-mark auto" ;;
+esac
+
+[ -z "$noconfirm" ] || cmd="$cmd -y"
+
+$cmd $opts "$@"

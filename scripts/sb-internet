@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# sb-battery wrapper for Termux
+
+state="$(termux-wifi-connectioninfo)"
+state="${state#*state\": \"}"
+state="${state%%\"*}"
+
+case "$state" in
+	COMPLETED )
+		rssi="$(termux-wifi-connectioninfo)"
+		rssi="${rssi#*rssi\": }"
+		rssi="${rssi%%,*}"
+		quality=$(( ( rssi + 100 ) * 100 / 80 ))
+		[ $quality -gt 100 ] && quality=100
+		wifiicon="📶 $quality% "
+	;;
+	DISCONNECTED ) wifiicon="📡 " ;;
+	UNINITIALIZED ) ;;
+	* ) wifiicon="❌ " ;;
+esac
+
+printf "%s\n" "$wifiicon"

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# linkhandler wrapper for Termux
+
+url="${1:-$(termux-clipboard-get)}"
+
+tmpfile="/tmp/$(printf %s "$url" | sed "s/.*\///;s/%20/ /g")"
+
+case "$url" in
+	*youtube.com/watch*|*youtube.com/playlist*|*youtube.com/shorts*|*youtu.be*|*hooktube.com*|*bitchute.com*|*videos.lukesmith.xyz*|*odysee.com*)
+		qndl "$url" >/dev/null 2>&1 ;;
+	*mkv|*webm|*mp4|*png|*jpg|*jpe|*jpeg|*gif|*webp|*pdf|*cbz|*cbr )
+		curl -sL "$url" -o "$tmpfile" \
+			&& mimeopen "$tmpfile" >/dev/null 2>&1 & ;;
+	*mp3|*flac|*opus|*mp3?source* )
+		qndl "$url" "curl -LO" >/dev/null 2>&1 ;;
+	* )
+		[ -f "$url" ] \
+			&& setsid -f "$TERMINAL" -e "$EDITOR" "$url" >/dev/null 2>&1 \
+			|| setsid -f "$BROWSER" "$url" >/dev/null 2>&1
+esac

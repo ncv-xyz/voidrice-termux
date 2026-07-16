@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# sb-forecast wrapper for Termux
+
+url="${WTTRURL:-wttr.in}"
+weatherreport="${XDG_CACHE_HOME:-$HOME/.cache}/weatherreport"
+
+getforecast() {
+	curl -sf "$url/$LOCATION" \
+		--output "$weatherreport" \
+		&& touch "$weatherreport"
+}
+
+checkforecast() { [ "$(stat -c %y "$weatherreport" 2>/dev/null | cut -d' ' -f1)" = "$(date '+%Y-%m-%d')" ] ;}
+
+getprecipchance() {
+	printf %s "$weatherdata" \
+		| sed "16q;d" \
+		| grep -wo "[0-9]*%" \
+		| sort -rn \
+		| head -1q
+}
+
+getdailyhighlow() {
+	printf %s "$weatherdata" \
+		| sed "13q;d" \
+		| grep -o "m\\([-+]\\)*[0-9]\\+" \
+		| sed "s/[+m]//g" \
+		| sort -g \
+		| sed -e 1b -e '$!d'
+}
+
+readfile() { weatherdata="$(cat "$weatherreport")" ;}
+
+showweather() {
+	readfile
+	printf "☔%s 🥶%s° 🌞%s°\n" \
+		"$(getprecipchance)" \
+		$(getdailyhighlow)
+}
+
+checkforecast && showweather || {
+	tries=0; while [ $tries -ne 100 ]; do
+		getforecast && break \
+			|| { tries=$((tries+1));
+			sleep .1 ;}
+	done ;}
