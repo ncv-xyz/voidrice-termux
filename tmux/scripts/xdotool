@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# xdotool wrapper for tmux
+
+[ "$1" = type ] && shift || exit
+
+for o in "$@"; do case "$o" in
+	--[wd*] ) shift 2 ;;
+	-* ) shift ;;
+esac done
+
+[ -n "$*" ] \
+	&& input="$(cat "$@")" \
+	|| input="${*:-$([ -t 0 ] || cat)}"
+
+
+tmux send-keys "$input"

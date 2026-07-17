@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# sysact substitute for tmux
+
+case "$(printf "🔒 lock\n🚪 leave tmux\n♻️ renew tmux" | dmenu -i -p "Action: ")" in
+	"🔒 lock" ) mpc pause & tmux lock ;;
+	"🚪 leave tmux" ) tmux kill-server ;;
+	"♻️ renew tmux" ) tmux source-file -q "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf" ;;
+	* ) exit 1 ;;
+esac

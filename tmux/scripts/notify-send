@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# notify-send wrapper for tmux
+
+for o in "$@"; do case "$o" in
+	--h*|-\? ) exit ;;
+	--u*|-u ) urgency="$2"; shift 2 ;;
+	[!-]* ) case "${args:-0}" in
+		0 ) summary="$o"; args=1 ;;
+		1 ) body="$o"; args=2 ;;
+		esac ;;
+esac done
+
+urgency="${urgency:-normal}"
+
+timeout="$(tmux show-options -gv "@dunst${urgency}timeout" 2>/dev/null \
+	|| tmux show-options -gv display-time 2>/dev/null)"
+
+color="$(tmux sshow-options -gv "@dunst${urgency}color" 2>/dev/null)"
+
+background="${color#*bg=}"
+background="${background%%[ ,]*}"
+
+[ -z "$body" ] || summary="#[bright]$summary#[none] "
+body="#[$color]$summary$body#[fill=$background]"
+
+tmux display-message -C -d "$timeout" "$body"

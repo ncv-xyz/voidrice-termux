@@ -1,0 +1,104 @@
+#!/bin/sh
+
+# slock wrapper for tmux
+
+# default password is "larbs"
+hash="1AL/ZFV8uk4BotH3:b681a41ef6b077d09f23e2c109efe45265d6f58505e970711d93c75c1fd05e7b2f7e2c80e88280560a9f97c2354adf6f2257bfc1b2e1087ceeca89e33fce75b9"
+
+color_init="#000000" # after initialization
+color_input="#005577" # during input
+color_failed="#CC3333" # wrong password
+
+color() {
+	case "$1" in
+		init ) color="${color_init#\#}" ;;
+		input ) color="${color_input#\#}" ;;
+		failed ) color="${color_failed#\#}" ;;
+	esac
+	color_r="0x${color%????}"
+	color_g="0x${color#??}"
+	color_g="${color_g%??}"
+	color_b="0x${color#????}"
+	printf "\033[48;2;%d;%d;%dm" \
+		"$color_r" "$color_g" "$color_b"
+	clear
+}
+
+usage() {
+	printf "usage: slock [-v] [makepw] [cmd [arg ...]]\n" # added makepw function
+	exit
+}
+
+gethash() {
+	# Check if the current user has a password entry
+	salt="${hash%:*}"
+	hash="${hash#*:}"
+	case 0 in
+		$(( ${#salt} == 16 )) )
+			printf "slock: bad salt\n"
+			exit 1 ;;
+		$(( ${#hash} == 128 )) )
+			printf "slock: bad hash\n"
+			exit 1 ;;
+	esac
+}
+
+readpw() {
+	unset keypress passwd
+	stty -echo raw
+	keypress="$(dd bs=1 count=1 </dev/tty 2>/dev/null)"
+	color input
+	stty icanon icrnl
+	read -r passwd
+	passwd="$(printf %s%s "$keypress" "$passwd" \
+		| tr -cd "[:print:]")"
+	passwd="$(printf %s%s "$salt" "$passwd" \
+		| sha512sum)"
+	passwd="${passwd%% *}"
+	[ "$passwd" = "$hash" ]
+}
+
+lockscreen() {
+	trap 'tput rmcup cnorm sgr0; stty "$stty_save"' HUP INT QUIT TERM PWR EXIT
+	tput smcup civis
+	color init
+	stty_save="$(stty -g)"
+}
+
+makepw() {
+	printf "Enter custom password: "
+	stty -echo
+	unset passwd; read -r passwd
+	stty "$stty_save"
+	salt="$(tr -dc "./0-9A-Za-z" </dev/urandom | head -c 16)"
+	hash="$(printf %s%s "$salt" "$passwd" | sha512sum)"
+	hash="${hash%% *}"
+	hash="$salt:$hash"
+	printf "\nHash of custom password:\n%s\n" "$hash"
+	exit
+}
+
+case "$1" in
+	-v ) printf "slock-1.6\n"; exit ;;
+	-* ) usage ;;
+	makepw ) makepw ;;
+esac
+
+gethash
+lockscreen
+
+# run post-lock command
+if [ -n "$1" ]; then
+	"$@" >/dev/null 2>&1 || {
+		tput rmcup cnorm sgr0
+		stty "$stty_save"
+		printf "slock: failed to execute post-lock command: %s\n" "$1"
+		exit
+	}
+fi
+
+# everything is now blank. Wait for the correct password
+while :; do
+	readpw && break
+	color failed
+done
